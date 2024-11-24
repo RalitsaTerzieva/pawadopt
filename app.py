@@ -27,3 +27,13 @@ class Puppy(db.Model):
 
     def __repr__(self):
         return f"Puppy name is {self.name}"
+    
+
+#Views part
+@app.route('/')
+def index():
+    return render_template('home.html')
+
+@app.route('/add', methods=["GET", "POST"])
+def add_pup():
+    form = AddFrom()
