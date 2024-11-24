@@ -36,7 +36,7 @@ def index():
 
 @app.route('/add', methods=["GET", "POST"])
 def add_pup():
-    form = AddFrom()
+    form = AddForm()
 
     if form.validate_on_submit():
 
