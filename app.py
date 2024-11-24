@@ -1,5 +1,5 @@
 import os
-from forms import AddFrom, DelForm
+from forms import AddForm, DelForm
 from flask import Flask, render_template, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -46,6 +46,30 @@ def add_pup():
         db.session.add(new_puppy)
         db.session.commit()
 
-        redirect(url_for('list.html'))
+        return redirect(url_for('list_pup'))
 
     return render_template('add.html', form=form)
+
+@app.route('/list')
+def list_pup():
+   
+   puppies = Puppy.query.all()
+   return render_template('list.html', puppies=puppies)
+
+@app.route('/delete', methods=["GET", "POST"])
+def delete_pup():
+
+    form = DelForm()
+
+    if form.validate_on_submit():
+        id = form.id.data
+        puppy = Puppy.query.get(id)
+        db.session.delete(puppy)
+        db.session.commit()
+
+        return redirect(url_for('list_pup'))
+    
+    return render_template('delete.html', form=form)
+
+if __name__ == '__main__':
+    app.run(debug=True)
