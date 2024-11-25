@@ -15,5 +15,5 @@ class DelForm(FlaskForm):
 class AddOwner(FlaskForm):
 
     name = StringField('Owner name: ')
-    puppy = IntegerField('Id of a puppy to be addopted: ')
-    submit = SubmitField('Remove puppy')
+    puppy_id = IntegerField('Id of a puppy to be addopted: ')
+    submit = SubmitField('Add owner')

@@ -2,6 +2,12 @@
 
 {% block content %}
 
+{% for mes in get_flashed_messages() %}
+    <div class="alert alert-secondary" role="alert">
+    {{mes}}
+    </div>
+{% endfor %}
+
 <div class="jumbotron">
     <h1>Add an Owner</h1>
     <p>Add a new owner with the form below:</p>
@@ -9,7 +15,7 @@
     <form method="POST">
         {{form.hidden_tag()}}
         {{form.name.label}}{{form.name()}}
-        {{form.id}}{{form.id()}}
+        {{ form.puppy_id.label }} {{ form.puppy_id() }}
         {{form.submit()}}
     </form>
 

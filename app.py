@@ -1,6 +1,6 @@
 import os
 from forms import AddForm, DelForm, AddOwner
-from flask import Flask, render_template, url_for, redirect
+from flask import Flask, render_template, url_for, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
@@ -71,21 +71,33 @@ def list_pup():
    puppies = Puppy.query.all()
    return render_template('list.html', puppies=puppies)
 
-@app.route('/owner')
+@app.route('/owner', methods=['GET', 'POST'])
 def add_owner():
     form = AddOwner()
 
     if form.validate_on_submit():
+       
         name = form.name.data
-        id = form.id.data
+        puppy_id = form.puppy_id.data
 
-        puppy_for_adoption = db.session.get(Puppy, id)
-        owner = Owner(name, puppy_id=puppy_for_adoption)
+        
+        puppy_for_adoption = db.session.get(Puppy, puppy_id)
 
-        db.session.add_all([puppy_for_adoption, owner])
+        if not puppy_for_adoption:
+            flash(f"No puppy found with ID {puppy_id}", 'danger')
+            return redirect(url_for('add_owner'))
+
+        owner = Owner(name=name, puppy_id=puppy_id)
+
+        db.session.add(owner)
         db.session.commit()
 
+        flash(f"Owner {name} has been added to puppy ID {puppy_id}!", 'success')
+        return redirect(url_for('list_pup'))
+
+    #
     return render_template('owner.html', form=form)
+
 
 @app.route('/delete', methods=["GET", "POST"])
 def delete_pup():
